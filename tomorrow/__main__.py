@@ -30,8 +30,14 @@ def main():
         total_history = 0
         total_forecast = 0
         failed_locations = []
+        rate_limited = False
 
         for idx, (latitude, longitude) in enumerate(LOCATIONS, 1):
+            if rate_limited:
+                logger.warning(f"\n  [{idx}/{len(LOCATIONS)}] Skipping location ({latitude}, {longitude}) — rate limit active")
+                failed_locations.append((latitude, longitude, "rate_limit"))
+                continue
+
             logger.info(f"\n  [{idx}/{len(LOCATIONS)}] Processing location ({latitude}, {longitude})...")
             try:
                 result = run_pipeline(latitude, longitude)
@@ -42,6 +48,8 @@ def main():
             except RateLimitError as e:
                 logger.warning(f"  ⏳ Location ({latitude}, {longitude}) skipped due to rate limit: {e}")
                 failed_locations.append((latitude, longitude, "rate_limit"))
+                rate_limited = True
+                logger.warning("  ⏳ Skipping remaining locations — rate limit won't reset until next hour")
             except Exception as e:
                 logger.error(f"  ✗ Location ({latitude}, {longitude}) failed: {e}")
                 failed_locations.append((latitude, longitude, str(e)))

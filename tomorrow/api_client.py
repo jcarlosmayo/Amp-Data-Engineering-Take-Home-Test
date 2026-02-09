@@ -8,7 +8,8 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
     retry_if_exception_type,
-    before_sleep_log
+    before_sleep_log,
+    RetryError
 )
 
 from tomorrow.config import (
@@ -195,6 +196,13 @@ def fetch_all_data(latitude: float = LATITUDE, longitude: float = LONGITUDE) -> 
             'recent_history': recent_history,
             'forecast': forecast
         }
+    except RetryError as e:
+        # Tenacity wraps the last exception in RetryError after exhausting retries.
+        # Unwrap it so callers can catch the original RateLimitError.
+        if e.last_attempt.failed and isinstance(e.last_attempt.exception(), RateLimitError):
+            logger.error(f"Rate limit exceeded for location ({latitude}, {longitude}) after retries")
+            raise e.last_attempt.exception() from e
+        raise
     except RateLimitError as e:
         logger.error(f"Rate limit exceeded for location ({latitude}, {longitude}): {e}")
         raise
