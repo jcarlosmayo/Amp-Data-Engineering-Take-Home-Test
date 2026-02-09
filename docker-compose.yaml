@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   postgres:
@@ -23,8 +21,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: python -m tomorrow
+    # Command removed - now using entrypoint.sh from Dockerfile for cron-based hourly execution
     environment:
+      API_KEY: ${API_KEY}
       PGHOST: postgres
       PGPORT: 5432
       PGUSER: postgres

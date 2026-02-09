@@ -6,7 +6,20 @@ ENV PIP_DISABLE_PIP_VERSION_CHECK=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
+# Install cron
+RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
 COPY ./requirements.txt .
 RUN python -m pip install -r requirements.txt
 
+# Copy application code
 COPY ./tomorrow /app/tomorrow
+
+# Copy cron configuration and entrypoint script
+COPY ./crontab /app/crontab
+COPY ./entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Set entrypoint for cron-based execution
+CMD ["/app/entrypoint.sh"]

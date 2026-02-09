@@ -1,0 +1,9 @@
+# NOTE: This file is a template and not used directly.
+# The actual crontab is generated dynamically by entrypoint.sh
+# to include environment variables from the Docker container.
+
+# Run weather scraper every hour at the start of the hour
+# Format: minute hour day month weekday command
+0 * * * * cd /app && /usr/local/bin/python -m tomorrow >> /var/log/cron.log 2>&1
+
+# Empty line required at end of crontab file
