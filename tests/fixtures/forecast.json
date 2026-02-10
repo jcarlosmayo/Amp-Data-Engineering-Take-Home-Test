@@ -1,0 +1,108 @@
+{
+  "timelines": {
+    "minutely": [
+      {
+        "time": "2025-02-09T08:05:00Z",
+        "values": {
+          "cloudBase": 0.2,
+          "cloudCeiling": 0.2,
+          "cloudCover": 100,
+          "dewPoint": -5.3,
+          "freezingRainIntensity": 0,
+          "hailProbability": 91.4,
+          "hailSize": 1.13,
+          "humidity": 88,
+          "precipitationProbability": 0,
+          "pressureSeaLevel": 1009,
+          "pressureSurfaceLevel": 995,
+          "rainIntensity": 0,
+          "sleetIntensity": 0,
+          "snowIntensity": 0,
+          "temperature": -3.6,
+          "temperatureApparent": -10.1,
+          "uvHealthConcern": 0,
+          "uvIndex": 0,
+          "visibility": 14.73,
+          "weatherCode": 1001,
+          "windDirection": 85,
+          "windGust": 6.8,
+          "windSpeed": 6.1
+        }
+      },
+      {
+        "time": "2025-02-09T08:06:00Z",
+        "values": {
+          "cloudBase": 0.2,
+          "cloudCeiling": 0.2,
+          "cloudCover": 100,
+          "dewPoint": -5.3,
+          "freezingRainIntensity": 0,
+          "hailProbability": 55.9,
+          "hailSize": 6.08,
+          "humidity": 88,
+          "precipitationProbability": 0,
+          "pressureSeaLevel": 1009,
+          "pressureSurfaceLevel": 995,
+          "rainIntensity": 0,
+          "sleetIntensity": 0,
+          "snowIntensity": 0,
+          "temperature": -3.6,
+          "temperatureApparent": -10.1,
+          "uvHealthConcern": 0,
+          "uvIndex": 0,
+          "visibility": 14.59,
+          "weatherCode": 1001,
+          "windDirection": 85,
+          "windGust": 6.8,
+          "windSpeed": 6.1
+        }
+      }
+    ],
+    "hourly": [
+      {
+        "time": "2025-02-09T08:00:00Z",
+        "values": {
+          "cloudBase": 0.2,
+          "cloudCeiling": 0.2,
+          "cloudCover": 100,
+          "dewPoint": -5.3,
+          "evapotranspiration": 0.009,
+          "freezingRainIntensity": 0,
+          "hailProbability": 66.9,
+          "hailSize": 9.92,
+          "humidity": 88,
+          "iceAccumulation": 0,
+          "iceAccumulationLwe": 0,
+          "precipitationProbability": 0,
+          "pressureSeaLevel": 1009,
+          "pressureSurfaceLevel": 995,
+          "rainAccumulation": 0,
+          "rainAccumulationLwe": 0,
+          "rainIntensity": 0,
+          "sleetAccumulation": 0,
+          "sleetAccumulationLwe": 0,
+          "sleetIntensity": 0,
+          "snowAccumulation": 0,
+          "snowAccumulationLwe": 0.47,
+          "snowDepth": 0,
+          "snowIntensity": 0,
+          "temperature": -3.6,
+          "temperatureApparent": -10.1,
+          "uvHealthConcern": 0,
+          "uvIndex": 0,
+          "visibility": 14.73,
+          "weatherCode": 1001,
+          "windDirection": 85,
+          "windGust": 6.8,
+          "windSpeed": 6.1
+        }
+      }
+    ]
+  },
+  "location": {
+    "lat": 30.271127700805664,
+    "lon": -97.74369812011719,
+    "name": "Austin, Travis County, Texas, United States",
+    "type": "administrative"
+  }
+}
