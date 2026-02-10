@@ -3,7 +3,7 @@ import os
 from typing import Tuple
 
 # API Configuration
-API_KEY = os.getenv('API_KEY', 'VvSbwQ6UcZXAqsM1u7wB1E1VqexfGgrr')
+API_KEY = os.environ['API_KEY']
 BASE_URL = 'https://api.tomorrow.io/v4'
 
 # API Endpoints
