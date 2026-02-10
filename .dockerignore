@@ -1,0 +1,13 @@
+**/*.pyc
+**/*.pyi
+**/*.pyx
+**/__pycache__
+.git
+.gitignore
+.env
+tests/
+notebooks/
+blobs/
+README.md
+ASSIGNMENT.md
+*.md

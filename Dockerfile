@@ -21,5 +21,6 @@ COPY ./crontab /app/crontab
 COPY ./entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
+# Note: cron daemon requires root, so no USER switch here.
 # Set entrypoint for cron-based execution
 CMD ["/app/entrypoint.sh"]
