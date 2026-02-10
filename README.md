@@ -313,6 +313,26 @@ FROM weather_data;
 
 ---
 
+### Direct Loading vs File Staging
+
+**Chosen Approach: Direct API → Database Pipeline**
+
+The current pipeline ([tomorrow/pipeline.py](tomorrow/pipeline.py)) fetches, transforms, and loads data in a single pass without staging raw API responses to disk.
+
+**Alternative considered (two-stage):** Save raw JSON to disk first (`API → JSON files → database`), then load from files. This would decouple extraction from loading, meaning a database failure would never waste rate-limited API calls — you'd just replay from the files. It also enables reprocessing from raw data if the schema or transformation logic changes.
+
+**Why we chose direct loading:**
+- The `raw_data` JSONB column already preserves the complete API response inside the database, covering the reprocessability need.
+- The upsert logic (`ON CONFLICT ... DO UPDATE`) makes the pipeline idempotent, so re-running after a failure is safe.
+- With only 10 locations and small payloads, file management overhead (naming, cleanup, tracking loaded files) adds complexity without proportional benefit.
+
+**When file staging would be better:**
+- High API costs or strict rate limits where re-fetching is unacceptable
+- Large payloads where database inserts are slow or failure-prone
+- Need to reprocess data with different transformation logic without re-fetching
+
+---
+
 ### Data Integrity and Idempotency
 
 **UNIQUE Constraint:**
