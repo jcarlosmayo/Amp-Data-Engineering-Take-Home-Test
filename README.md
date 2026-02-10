@@ -548,11 +548,34 @@ A security review was conducted covering all application code, Docker configurat
 |------|---------|---------|
 | SQL queries ([db_client.py](tomorrow/db_client.py)) | INTERVAL clause uses `%s` placeholders | Safe — psycopg2 parameterized queries handle these correctly |
 | API key logging ([api_client.py](tomorrow/api_client.py)) | `logger.debug()` includes params with API key | Safe — DEBUG logging is disabled by default (level=INFO) |
-| API key in config ([config.py](tomorrow/config.py)) | Hardcoded fallback key in `os.getenv()` | Acceptable — free-tier test key, overridden by environment variable |
+| API key in config ([config.py](tomorrow/config.py)) | `os.environ['API_KEY']` — fails fast if unset | Safe — no hardcoded fallback; missing key is caught immediately at startup |
 | Crontab credentials ([entrypoint.sh](entrypoint.sh)) | Environment variables written to `/tmp/crontab.tmp` | Acceptable — single-purpose Docker container with no privilege boundaries |
 | Jupyter authentication ([docker-compose.yaml](docker-compose.yaml)) | Token and password disabled | Acceptable — intentional local development configuration, localhost only |
 
 All database queries use parameterized queries via psycopg2. Upsert logic uses `ON CONFLICT ... DO UPDATE` to prevent duplicate injection. No user-facing HTTP endpoints exist (scraper runs on cron, no web server).
+
+---
+
+## Tests
+
+The test suite covers the three most critical areas of the pipeline without requiring Docker or a database:
+
+| File | Tests | What it covers |
+|------|-------|---------------|
+| [tests/test_data_processor.py](tests/test_data_processor.py) | 6 | camelCase-to-snake_case field mapping, metadata attachment, raw_data preservation, empty responses |
+| [tests/test_api_client.py](tests/test_api_client.py) | 3 | Successful request, 429 retry logic (3 attempts then failure), retry-then-success |
+| [tests/test_db_client.py](tests/test_db_client.py) | 3 | execute_batch called correctly, upsert SQL contains ON CONFLICT clause, raw_data serialized to JSON |
+
+Test fixtures in [tests/fixtures/](tests/fixtures/) contain real Tomorrow.io API sample responses for both the recent history and forecast endpoints.
+
+**Running the tests:**
+
+```bash
+pip install -r requirements.txt
+API_KEY=test-key pytest -v
+```
+
+All 12 tests run in under 1 second. External dependencies (HTTP requests, PostgreSQL) are mocked so no services need to be running.
 
 ---
 
