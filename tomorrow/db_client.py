@@ -291,7 +291,7 @@ class DatabaseClient:
             temperature,
             wind_speed,
             humidity,
-            precipitation,
+            rain_intensity,
             cloud_cover,
             pressure_surface_level,
             visibility,
