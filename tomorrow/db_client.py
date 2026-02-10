@@ -1,9 +1,11 @@
 """Database client for storing weather data in PostgreSQL."""
+
+import json
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 import psycopg2
 from psycopg2.extras import execute_batch
-import json
 
 from tomorrow.config import get_db_connection_string
 
@@ -226,8 +228,8 @@ class DatabaseClient:
             with self.conn.cursor() as cursor:
                 # Convert raw_data dict to JSON string for psycopg2
                 for record in records:
-                    if 'raw_data' in record and record['raw_data'] is not None:
-                        record['raw_data'] = json.dumps(record['raw_data'])
+                    if "raw_data" in record and record["raw_data"] is not None:
+                        record["raw_data"] = json.dumps(record["raw_data"])
 
                 execute_batch(cursor, insert_query, records)
                 self.conn.commit()
@@ -267,11 +269,7 @@ class DatabaseClient:
             raise
 
     def get_hourly_timeseries(
-        self,
-        latitude: float,
-        longitude: float,
-        hours_past: int = 24,
-        hours_future: int = 120
+        self, latitude: float, longitude: float, hours_past: int = 24, hours_future: int = 120
     ) -> List[Dict[str, Any]]:
         """
         Get hourly time series data for a specific location.

@@ -1,14 +1,14 @@
 """Tests for tomorrow.api_client — HTTP retry logic with mocked requests."""
+
 from unittest.mock import MagicMock, patch
 
 import pytest
 from tenacity import RetryError, wait_none
 
-from tomorrow.api_client import TomorrowIOClient, RateLimitError
+from tomorrow.api_client import RateLimitError, TomorrowIOClient
 
 
 class TestMakeRequest:
-
     def _make_client(self):
         """Create a client with retry waits disabled for fast tests."""
         client = TomorrowIOClient(api_key="test-key")

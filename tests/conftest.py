@@ -1,4 +1,5 @@
 """Shared fixtures for the test suite."""
+
 import json
 from pathlib import Path
 

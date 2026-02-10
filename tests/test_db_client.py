@@ -1,4 +1,5 @@
 """Tests for tomorrow.db_client — upsert behavior with mocked psycopg2."""
+
 import json
 from unittest.mock import MagicMock, patch
 
@@ -24,7 +25,6 @@ def mock_db():
 
 
 class TestInsertWeatherData:
-
     def test_calls_execute_batch(self, mock_db, sample_flat_record):
         client, mock_cursor = mock_db
 

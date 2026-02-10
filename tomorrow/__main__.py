@@ -1,12 +1,13 @@
 import logging
 import sys
-from tomorrow.init_db import initialize_database
-from tomorrow.pipeline import run_pipeline
+
 from tomorrow.api_client import RateLimitError
 from tomorrow.config import LOCATIONS
+from tomorrow.init_db import initialize_database
+from tomorrow.pipeline import run_pipeline
 
 # configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(name)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -34,16 +35,18 @@ def main():
 
         for idx, (latitude, longitude) in enumerate(LOCATIONS, 1):
             if rate_limited:
-                logger.warning(f"\n  [{idx}/{len(LOCATIONS)}] Skipping location ({latitude}, {longitude}) — rate limit active")
+                logger.warning(
+                    f"\n  [{idx}/{len(LOCATIONS)}] Skipping location ({latitude}, {longitude}) — rate limit active"
+                )
                 failed_locations.append((latitude, longitude, "rate_limit"))
                 continue
 
             logger.info(f"\n  [{idx}/{len(LOCATIONS)}] Processing location ({latitude}, {longitude})...")
             try:
                 result = run_pipeline(latitude, longitude)
-                total_records += result['records_processed']
-                total_history += result['history_count']
-                total_forecast += result['forecast_count']
+                total_records += result["records_processed"]
+                total_history += result["history_count"]
+                total_forecast += result["forecast_count"]
                 logger.info(f"  ✓ Location ({latitude}, {longitude}) completed: {result['records_processed']} records")
             except RateLimitError as e:
                 logger.warning(f"  ⏳ Location ({latitude}, {longitude}) skipped due to rate limit: {e}")
@@ -79,5 +82,5 @@ def main():
         return 1
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

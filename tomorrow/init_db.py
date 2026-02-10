@@ -1,12 +1,11 @@
 """Script to initialize the database tables."""
+
 import logging
+
 from tomorrow.db_client import DatabaseClient
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -25,5 +24,5 @@ def initialize_database():
         raise
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     initialize_database()

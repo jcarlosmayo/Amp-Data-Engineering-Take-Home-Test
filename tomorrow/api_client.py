@@ -1,32 +1,19 @@
 """API client for Tomorrow.io weather data."""
-import logging
-import time
-from typing import Dict, Any, Optional
-import requests
-from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_exponential,
-    retry_if_exception_type,
-    before_sleep_log,
-    RetryError
-)
 
-from tomorrow.config import (
-    API_KEY,
-    RECENT_HISTORY_URL,
-    FORECAST_URL,
-    LATITUDE,
-    LONGITUDE,
-    UNITS,
-    TIMESTEPS
-)
+import logging
+from typing import Any, Dict, Optional
+
+import requests
+from tenacity import RetryError, before_sleep_log, retry, retry_if_exception_type, stop_after_attempt, wait_exponential
+
+from tomorrow.config import API_KEY, FORECAST_URL, LATITUDE, LONGITUDE, RECENT_HISTORY_URL, TIMESTEPS, UNITS
 
 logger = logging.getLogger(__name__)
 
 
 class RateLimitError(Exception):
     """Raised when API rate limit is exceeded."""
+
     def __init__(self, message: str, retry_after: int = None):
         super().__init__(message)
         self.retry_after = retry_after
@@ -49,7 +36,7 @@ class TomorrowIOClient:
         retry=retry_if_exception_type(RateLimitError),
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=60, max=300),
-        before_sleep=before_sleep_log(logger, logging.WARNING)
+        before_sleep=before_sleep_log(logger, logging.WARNING),
     )
     def _make_request(self, url: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """
@@ -71,7 +58,7 @@ class TomorrowIOClient:
             RateLimitError: If rate limit exceeded after all retries
             requests.exceptions.RequestException: If other request errors occur
         """
-        params['apikey'] = self.api_key
+        params["apikey"] = self.api_key
 
         logger.info(f"Making request to {url}")
         logger.debug(f"Parameters: {params}")
@@ -81,15 +68,12 @@ class TomorrowIOClient:
 
             # Check for rate limit (429 Too Many Requests)
             if response.status_code == 429:
-                retry_after = int(response.headers.get('Retry-After', 3600))
+                retry_after = int(response.headers.get("Retry-After", 3600))
                 logger.warning(
-                    f"⚠️  Rate limit exceeded (429). "
-                    f"API requests: 25/hour limit reached. "
-                    f"Retry after: {retry_after}s"
+                    f"⚠️  Rate limit exceeded (429). API requests: 25/hour limit reached. Retry after: {retry_after}s"
                 )
                 raise RateLimitError(
-                    f"Tomorrow.io API rate limit exceeded. Retry after {retry_after} seconds.",
-                    retry_after=retry_after
+                    f"Tomorrow.io API rate limit exceeded. Retry after {retry_after} seconds.", retry_after=retry_after
                 )
 
             # Raise HTTPError for other 4xx/5xx status codes
@@ -117,11 +101,7 @@ class TomorrowIOClient:
             raise
 
     def get_recent_history(
-        self,
-        latitude: float = LATITUDE,
-        longitude: float = LONGITUDE,
-        units: str = UNITS,
-        timesteps: str = TIMESTEPS
+        self, latitude: float = LATITUDE, longitude: float = LONGITUDE, units: str = UNITS, timesteps: str = TIMESTEPS
     ) -> Dict[str, Any]:
         """
         Fetch recent weather history for a location.
@@ -135,21 +115,13 @@ class TomorrowIOClient:
         Returns:
             Recent weather history data
         """
-        params = {
-            'location': f'{latitude},{longitude}',
-            'units': units,
-            'timesteps': timesteps
-        }
+        params = {"location": f"{latitude},{longitude}", "units": units, "timesteps": timesteps}
 
         logger.info(f"Fetching recent history for location ({latitude}, {longitude})")
         return self._make_request(RECENT_HISTORY_URL, params)
 
     def get_forecast(
-        self,
-        latitude: float = LATITUDE,
-        longitude: float = LONGITUDE,
-        units: str = UNITS,
-        timesteps: str = TIMESTEPS
+        self, latitude: float = LATITUDE, longitude: float = LONGITUDE, units: str = UNITS, timesteps: str = TIMESTEPS
     ) -> Dict[str, Any]:
         """
         Fetch weather forecast for a location.
@@ -163,11 +135,7 @@ class TomorrowIOClient:
         Returns:
             Weather forecast data
         """
-        params = {
-            'location': f'{latitude},{longitude}',
-            'units': units,
-            'timesteps': timesteps
-        }
+        params = {"location": f"{latitude},{longitude}", "units": units, "timesteps": timesteps}
 
         logger.info(f"Fetching forecast for location ({latitude}, {longitude})")
         return self._make_request(FORECAST_URL, params)
@@ -192,10 +160,7 @@ def fetch_all_data(latitude: float = LATITUDE, longitude: float = LONGITUDE) -> 
         recent_history = client.get_recent_history(latitude, longitude)
         forecast = client.get_forecast(latitude, longitude)
 
-        return {
-            'recent_history': recent_history,
-            'forecast': forecast
-        }
+        return {"recent_history": recent_history, "forecast": forecast}
     except RetryError as e:
         # Tenacity wraps the last exception in RetryError after exhausting retries.
         # Unwrap it so callers can catch the original RateLimitError.

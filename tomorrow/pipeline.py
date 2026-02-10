@@ -1,15 +1,14 @@
 """Complete pipeline to fetch, flatten, and load weather data."""
+
 import logging
+
 from tomorrow.api_client import fetch_all_data
-from tomorrow.data_processor import process_api_responses, combine_records
-from tomorrow.db_client import DatabaseClient
 from tomorrow.config import LATITUDE, LONGITUDE
+from tomorrow.data_processor import combine_records, process_api_responses
+from tomorrow.db_client import DatabaseClient
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(name)s - %(message)s'
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -35,10 +34,10 @@ def run_pipeline(latitude: float = LATITUDE, longitude: float = LONGITUDE):
         # Step 2: Flatten the JSON responses
         logger.info("Step 2: Flattening JSON responses...")
         processed_data = process_api_responses(
-            recent_history=api_data['recent_history'],
-            forecast=api_data['forecast'],
+            recent_history=api_data["recent_history"],
+            forecast=api_data["forecast"],
             latitude=latitude,
-            longitude=longitude
+            longitude=longitude,
         )
         all_records = combine_records(processed_data)
         logger.info(f"✓ Flattened {len(all_records)} total records")
@@ -54,10 +53,10 @@ def run_pipeline(latitude: float = LATITUDE, longitude: float = LONGITUDE):
         logger.info("=" * 80)
 
         return {
-            'success': True,
-            'records_processed': len(all_records),
-            'history_count': len(processed_data['recent_history']),
-            'forecast_count': len(processed_data['forecast'])
+            "success": True,
+            "records_processed": len(all_records),
+            "history_count": len(processed_data["recent_history"]),
+            "forecast_count": len(processed_data["forecast"]),
         }
 
     except Exception as e:
@@ -65,9 +64,9 @@ def run_pipeline(latitude: float = LATITUDE, longitude: float = LONGITUDE):
         raise
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     result = run_pipeline()
-    print(f"\nPipeline Summary:")
+    print("\nPipeline Summary:")
     print(f"  - Total records: {result['records_processed']}")
     print(f"  - History records: {result['history_count']}")
     print(f"  - Forecast records: {result['forecast_count']}")

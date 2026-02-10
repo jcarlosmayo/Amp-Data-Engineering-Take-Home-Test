@@ -1,14 +1,15 @@
 """Configuration module for Tomorrow.io API client."""
+
 import os
 from typing import Tuple
 
 # API Configuration
-API_KEY = os.environ['API_KEY']
-BASE_URL = 'https://api.tomorrow.io/v4'
+API_KEY = os.environ["API_KEY"]
+BASE_URL = "https://api.tomorrow.io/v4"
 
 # API Endpoints
-RECENT_HISTORY_URL = f'{BASE_URL}/weather/history/recent'
-FORECAST_URL = f'{BASE_URL}/weather/forecast'
+RECENT_HISTORY_URL = f"{BASE_URL}/weather/history/recent"
+FORECAST_URL = f"{BASE_URL}/weather/forecast"
 
 # All locations from ASSIGNMENT.md (South Texas, near Brownsville)
 LOCATIONS = [
@@ -28,19 +29,21 @@ LOCATIONS = [
 LATITUDE, LONGITUDE = LOCATIONS[0]
 
 # API Parameters
-UNITS = 'metric'  # metric unit system
-TIMESTEPS = '1h'  # hourly data
+UNITS = "metric"  # metric unit system
+TIMESTEPS = "1h"  # hourly data
 
 # Database Configuration
-DB_HOST = os.getenv('PGHOST', 'localhost')
-DB_PORT = os.getenv('PGPORT', '5432')
-DB_NAME = os.getenv('PGDATABASE', 'tomorrow')
-DB_USER = os.getenv('PGUSER', 'postgres')
-DB_PASSWORD = os.getenv('PGPASSWORD', 'postgres')
+DB_HOST = os.getenv("PGHOST", "localhost")
+DB_PORT = os.getenv("PGPORT", "5432")
+DB_NAME = os.getenv("PGDATABASE", "tomorrow")
+DB_USER = os.getenv("PGUSER", "postgres")
+DB_PASSWORD = os.getenv("PGPASSWORD", "postgres")
+
 
 def get_location() -> Tuple[float, float]:
     """Return the latitude and longitude as a tuple."""
     return (LATITUDE, LONGITUDE)
+
 
 def get_db_connection_string() -> str:
     """Return PostgreSQL connection string."""

@@ -1,9 +1,9 @@
 """Tests for tomorrow.data_processor — pure transformation functions."""
+
 from tomorrow.data_processor import flatten_weather_data, process_api_responses
 
 
 class TestFlattenWeatherData:
-
     def test_returns_correct_count(self, sample_history_response):
         result = flatten_weather_data(sample_history_response, "recent_history", 25.86, -97.42)
         assert len(result) == 24
@@ -52,7 +52,6 @@ class TestFlattenWeatherData:
 
 
 class TestProcessApiResponses:
-
     def test_returns_both_types(self, sample_history_response, sample_forecast_response):
         result = process_api_responses(
             recent_history=sample_history_response,
