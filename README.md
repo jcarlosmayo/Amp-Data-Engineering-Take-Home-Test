@@ -573,6 +573,9 @@ Test fixtures in [tests/fixtures/](tests/fixtures/) contain real Tomorrow.io API
 ```bash
 pip install -r requirements.txt
 API_KEY=test-key pytest -v
+
+# Or using the Makefile shortcut:
+make test
 ```
 
 All 12 tests run in under 1 second. External dependencies (HTTP requests, PostgreSQL) are mocked so no services need to be running.
